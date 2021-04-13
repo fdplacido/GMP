@@ -25,7 +25,8 @@
 
 DECLARE_COMPONENT(MarlinProcessorWrapper)
 
-MarlinProcessorWrapper::MarlinProcessorWrapper(const std::string& name, ISvcLocator* pSL) : GaudiAlgorithm(name, pSL) {
+MarlinProcessorWrapper::MarlinProcessorWrapper(const std::string& name, ISvcLocator* pSL)
+  : GaudiAlgorithm(name, pSL), m_timingSvc("TimingService", name) {
   // register log level names with the logstream ---------
   streamlog::out.addLevelName<streamlog::DEBUG>();
   streamlog::out.addLevelName<streamlog::DEBUG0>();
@@ -168,6 +169,12 @@ StatusCode MarlinProcessorWrapper::instantiateProcessor(
 }
 
 StatusCode MarlinProcessorWrapper::initialize() {
+
+  if (!m_timingSvc) {
+    error() << "Unable to locate Timing Service" << endmsg;
+    return StatusCode::FAILURE;
+  }
+
   // initalize global marlin information, maybe betters as a _tool_
   static bool once = true;
   if (once) {
@@ -236,6 +243,7 @@ StatusCode MarlinProcessorWrapper::execute() {
   // call the refreshSeeds via the processor manager
   // FIXME: this is an overkill, but we need to call this once per event, not once for each execute call
   // how can this be done more efficiently?
+  m_timingSvc->addTime();
   auto* procMgr = marlin::ProcessorMgr::instance();
   procMgr->modifyEvent(the_event);
 

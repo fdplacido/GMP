@@ -96,3 +96,16 @@ target_include_directories(Lcio2EDM4hep PUBLIC
   EDM4HEP::edm4hep
   ${LCIO_INCLUDE_DIRS}
 )
+
+# TimingService
+gaudi_add_module(TimingService
+  SOURCES
+    src/components/TimingService.cpp
+  LINK
+    GaudiKernel
+)
+
+target_include_directories(TimingService
+  PUBLIC
+    k4MarlinWrapper
+)

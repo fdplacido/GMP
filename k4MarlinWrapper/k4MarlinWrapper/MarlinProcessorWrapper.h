@@ -51,6 +51,8 @@
 #include "k4MarlinWrapper/converters/IEDMConverter.h"
 
 
+#include <ITimingService.h>
+
 namespace marlin {
   class Processor;
   class StringParameters;
@@ -80,6 +82,8 @@ private:
   std::shared_ptr<marlin::StringParameters> parseParameters(
     const Gaudi::Property<std::vector<std::string>>& parameters,
     std::string& verbosity) const;
+
+  ServiceHandle<ITimingService> m_timingSvc;
 
   /// ProcessorType: The Type of the MarlinProcessor to use
   Gaudi::Property<std::string> m_processorType{this, "ProcessorType", {}};
