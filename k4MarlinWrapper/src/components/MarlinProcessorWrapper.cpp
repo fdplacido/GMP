@@ -25,7 +25,8 @@
 
 DECLARE_COMPONENT(MarlinProcessorWrapper)
 
-MarlinProcessorWrapper::MarlinProcessorWrapper(const std::string& name, ISvcLocator* pSL) : GaudiAlgorithm(name, pSL) {
+MarlinProcessorWrapper::MarlinProcessorWrapper(const std::string& name, ISvcLocator* pSL) : GaudiAlgorithm(name, pSL)
+{
   // register log level names with the logstream ---------
   streamlog::out.addLevelName<streamlog::DEBUG>();
   streamlog::out.addLevelName<streamlog::DEBUG0>();
@@ -77,19 +78,20 @@ MarlinProcessorWrapper::MarlinProcessorWrapper(const std::string& name, ISvcLoca
   declareProperty("Lcio2EDM4hepTool", m_lcio_conversionTool = nullptr);
 }
 
-StatusCode MarlinProcessorWrapper::loadProcessorLibraries() const {
+StatusCode MarlinProcessorWrapper::loadProcessorLibraries() const
+{
   // Load all libraries from the marlin_dll
   info() << "looking for marlindll" << endmsg;
   const char* const marlin_dll = getenv("MARLIN_DLL");
   if (marlin_dll == nullptr) {
     warning() << "MARLIN_DLL not set, not loading any processors " << endmsg;
-  } else {
+  }
+  else {
     info() << "Found marlin_dll " << marlin_dll << endmsg;
     const std::string marlin_dll_str(marlin_dll);
-    std::regex re{":+"};
+    std::regex re {":+"};
     std::vector<std::string> libraries = k4MW::util::split(marlin_dll_str, re);
-    if (libraries.back().empty())
-      libraries.pop_back();
+    if (libraries.back().empty()) libraries.pop_back();
     for (const auto& library : libraries) {
       info() << "Loading library " << library << endmsg;
       auto ret = gSystem->Load(library.c_str());
@@ -102,14 +104,13 @@ StatusCode MarlinProcessorWrapper::loadProcessorLibraries() const {
   return StatusCode::SUCCESS;
 }
 
-
 std::shared_ptr<marlin::StringParameters> MarlinProcessorWrapper::parseParameters(
   const Gaudi::Property<std::vector<std::string>>& parameters,
   std::string& verbosity) const
 {
   auto parameters_ptr = std::make_shared<marlin::StringParameters>();
   info() << "Parameter values for: " << name() << " of type " << std::string(m_processorType) << endmsg;
-  std::string              parameterName   = "";
+  std::string parameterName = "";
   std::vector<std::string> parameterValues = {};
 
   // convert the list of string into parameter name and value
@@ -140,7 +141,6 @@ std::shared_ptr<marlin::StringParameters> MarlinProcessorWrapper::parseParameter
 
     auto split_parameter = k4MW::util::split(parameterString);
     parameterValues.insert(parameterValues.end(), split_parameter.begin(), split_parameter.end());
-
   }
 
   return parameters_ptr;
@@ -167,7 +167,8 @@ StatusCode MarlinProcessorWrapper::instantiateProcessor(
   return StatusCode::SUCCESS;
 }
 
-StatusCode MarlinProcessorWrapper::initialize() {
+StatusCode MarlinProcessorWrapper::initialize()
+{
   // initalize global marlin information, maybe betters as a _tool_
   static bool once = true;
   if (once) {
@@ -200,12 +201,13 @@ StatusCode MarlinProcessorWrapper::initialize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode MarlinProcessorWrapper::execute() {
+StatusCode MarlinProcessorWrapper::execute()
+{
 
   // Get Event
   info() << "Getting the event for " << m_processor->name() << endmsg;
   DataObject* pObject = nullptr;
-  StatusCode  sc      = eventSvc()->retrieveObject("/Event/LCEvent", pObject);
+  StatusCode sc = eventSvc()->retrieveObject("/Event/LCEvent", pObject);
 
   lcio::LCEventImpl* the_event = nullptr;
 
@@ -219,15 +221,15 @@ StatusCode MarlinProcessorWrapper::execute() {
       error() << "Failed to store the EDM4hep to LCIO event" << endmsg;
       return reg_sc;
     }
-  } else {
+  }
+  else {
     debug() << "LCEvent retrieved successfully" << endmsg;
-    the_event =
-      dynamic_cast<IMPL::LCEventImpl*>(static_cast<LCEventWrapper*>(pObject)->getEvent());
+    the_event = dynamic_cast<IMPL::LCEventImpl*>(static_cast<LCEventWrapper*>(pObject)->getEvent());
   }
 
   // Found EDM Conversion tool
   if (!m_edm_conversionTool.empty()) {
-    StatusCode edm_sc =  m_edm_conversionTool->convertCollections(the_event);
+    StatusCode edm_sc = m_edm_conversionTool->convertCollections(the_event);
     if (edm_sc.isFailure()) {
       error() << "Failed converting EDM4hep to LCIO collection " << endmsg;
     }
@@ -243,17 +245,18 @@ StatusCode MarlinProcessorWrapper::execute() {
   scope.setName(name());
   scope.setLevel(m_verbosity);
 
-  //process the event in the processor
+  // process the event in the processor
   auto modifier = dynamic_cast<marlin::EventModifier*>(m_processor);
   if (modifier) {
     modifier->modifyEvent(the_event);
-  } else {
+  }
+  else {
     m_processor->processEvent(the_event);
   }
 
   // Found LCIO Conversion tool
   if (!m_lcio_conversionTool.empty()) {
-    StatusCode lcio_sc =  m_lcio_conversionTool->convertCollections(the_event);
+    StatusCode lcio_sc = m_lcio_conversionTool->convertCollections(the_event);
     if (lcio_sc.isFailure()) {
       error() << "Failed converting LCIO to EDM4hep collection " << endmsg;
     }
@@ -262,7 +265,8 @@ StatusCode MarlinProcessorWrapper::execute() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode MarlinProcessorWrapper::finalize() {
+StatusCode MarlinProcessorWrapper::finalize()
+{
   // need to call processors in reverse order
   auto processor = ProcessorStack().top();
   ProcessorStack().pop();

@@ -2,10 +2,10 @@
 #define K4MARLINWRAPPER_EDM4HEP2LCIO_H
 
 // std
-#include <vector>
-#include <string>
-#include <bitset>
 #include <algorithm>
+#include <bitset>
+#include <string>
+#include <vector>
 
 // GAUDI
 #include <GaudiAlg/GaudiTool.h>
@@ -14,12 +14,10 @@
 #include <k4FWCore/DataHandle.h>
 
 // k4MarlinWrapper
-#include "k4MarlinWrapper/converters/IEDMConverter.h"
 #include "k4MarlinWrapper/LCEventWrapper.h"
+#include "k4MarlinWrapper/converters/IEDMConverter.h"
 
-
-
-template <typename T1, typename T2>
+template<typename T1, typename T2>
 using vec_pair = std::vector<std::pair<T1, T2>>;
 
 struct CollectionsPairVectors {
@@ -38,18 +36,15 @@ struct CollectionsPairVectors {
 
 class EDM4hep2LcioTool : public GaudiTool, virtual public IEDMConverter {
 public:
-
   EDM4hep2LcioTool(const std::string& type, const std::string& name, const IInterface* parent);
   virtual ~EDM4hep2LcioTool();
   virtual StatusCode initialize();
   virtual StatusCode finalize();
 
-  StatusCode convertCollections(
-    lcio::LCEventImpl* lcio_event);
+  StatusCode convertCollections(lcio::LCEventImpl* lcio_event);
 
 private:
-
-  Gaudi::Property<std::vector<std::string>> m_edm2lcio_params{this, "Parameters", {}};
+  Gaudi::Property<std::vector<std::string>> m_edm2lcio_params {this, "Parameters", {}};
 
   void convertTracks(
     vec_pair<lcio::TrackImpl*, edm4hep::Track>& tracks_vec,
@@ -125,8 +120,7 @@ private:
     const std::string& lcio_coll_name,
     lcio::LCEventImpl* lcio_event);
 
-  void FillMissingCollections(
-    CollectionsPairVectors& collection_pairs);
+  void FillMissingCollections(CollectionsPairVectors& collection_pairs);
 
   void convertAdd(
     const std::string& type,
@@ -135,9 +129,7 @@ private:
     lcio::LCEventImpl* lcio_event,
     CollectionsPairVectors& collection_pairs);
 
-  bool collectionExist(
-    const std::string& collection_name,
-    lcio::LCEventImpl* lcio_event);
+  bool collectionExist(const std::string& collection_name, lcio::LCEventImpl* lcio_event);
 
   void optimizeOrderParams();
 };

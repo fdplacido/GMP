@@ -21,23 +21,23 @@
 #define K4MARLINWRAPPER_MARLINPROCESSORWRAPPER_H
 
 // std
-#include <stack>
 #include <cstdlib>
 #include <iostream>
+#include <stack>
 #include <string>
 
 // Gaudi
 #include <GaudiAlg/GaudiAlgorithm.h>
-#include <GaudiKernel/ToolHandle.h>
 #include <GaudiKernel/MsgStream.h>
+#include <GaudiKernel/ToolHandle.h>
 
 // LCIO
 #include <EVENT/LCEvent.h>
 #include <EVENT/LCRunHeader.h>
 
 // Marlin
-#include <marlin/Global.h>
 #include <marlin/EventModifier.h>
+#include <marlin/Global.h>
 #include <marlin/ProcessorEventSeeder.h>
 #include <marlin/ProcessorMgr.h>
 #include <marlin/StringParameters.h>
@@ -47,14 +47,13 @@
 
 // k4MarlinWrapper
 #include "k4MarlinWrapper/LCEventWrapper.h"
-#include "k4MarlinWrapper/util/k4MarlinWrapperUtil.h"
 #include "k4MarlinWrapper/converters/IEDMConverter.h"
-
+#include "k4MarlinWrapper/util/k4MarlinWrapperUtil.h"
 
 namespace marlin {
   class Processor;
   class StringParameters;
-}  // namespace marlin
+} // namespace marlin
 
 class MarlinProcessorWrapper : public GaudiAlgorithm {
 public:
@@ -65,8 +64,8 @@ public:
   virtual StatusCode initialize() override final;
 
 private:
-  std::string           m_verbosity = "MESSAGE";
-  marlin::Processor*    m_processor = nullptr;
+  std::string m_verbosity = "MESSAGE";
+  marlin::Processor* m_processor = nullptr;
 
   /// Load libraries specified by MARLIN_DLL environment variable
   StatusCode loadProcessorLibraries() const;
@@ -82,17 +81,19 @@ private:
     std::string& verbosity) const;
 
   /// ProcessorType: The Type of the MarlinProcessor to use
-  Gaudi::Property<std::string> m_processorType{this, "ProcessorType", {}};
-  /// Parameters: Dictionary of key and list of strings would be nice, but we just use a vector of strings for the moment
-  Gaudi::Property<std::vector<std::string>> m_parameters{this, "Parameters", {}};
+  Gaudi::Property<std::string> m_processorType {this, "ProcessorType", {}};
+  /// Parameters: Dictionary of key and list of strings would be nice, but we just use a vector of strings for the
+  /// moment
+  Gaudi::Property<std::vector<std::string>> m_parameters {this, "Parameters", {}};
 
-  ToolHandle<IEDMConverter> m_edm_conversionTool{"IEDMConverter/EDM4hep2Lcio", this};
-  ToolHandle<IEDMConverter> m_lcio_conversionTool{"IEDMConverter/Lcio2EDM4hep", this};
+  ToolHandle<IEDMConverter> m_edm_conversionTool {"IEDMConverter/EDM4hep2Lcio", this};
+  ToolHandle<IEDMConverter> m_lcio_conversionTool {"IEDMConverter/Lcio2EDM4hep", this};
 
   static std::stack<marlin::Processor*>& ProcessorStack();
 };
 
-std::stack<marlin::Processor*>& MarlinProcessorWrapper::ProcessorStack() {
+std::stack<marlin::Processor*>& MarlinProcessorWrapper::ProcessorStack()
+{
   static std::stack<marlin::Processor*> stack;
   return stack;
 }

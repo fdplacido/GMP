@@ -38,7 +38,6 @@
 
 #include "k4MarlinWrapper/LCEventWrapper.h"
 
-
 class LcioEvent : public GaudiAlgorithm {
 public:
   explicit LcioEvent(const std::string& name, ISvcLocator* pSL);
@@ -47,8 +46,8 @@ public:
   virtual StatusCode execute() override final;
 
 private:
-  Gaudi::Property<std::vector<std::string>> m_fileNames{this, "Files", {}};
-  IO::LCReader*                             m_reader = nullptr;
+  Gaudi::Property<std::vector<std::string>> m_fileNames {this, "Files", {}};
+  IO::LCReader* m_reader = nullptr;
 };
 
 #endif

@@ -21,19 +21,20 @@
 
 #include "k4MarlinWrapper/LcioEventAlgo.h"
 
-
 DECLARE_COMPONENT(LcioEvent)
 
 LcioEvent::LcioEvent(const std::string& name, ISvcLocator* pSL) : GaudiAlgorithm(name, pSL) {}
 
-StatusCode LcioEvent::initialize() {
+StatusCode LcioEvent::initialize()
+{
   m_reader = IOIMPL::LCFactory::getInstance()->createLCReader();
   m_reader->open(m_fileNames);
   info() << "Initialized the LcioEvent Algo: " << m_fileNames[0] << endmsg;
   return StatusCode::SUCCESS;
 }
 
-StatusCode LcioEvent::execute() {
+StatusCode LcioEvent::execute()
+{
   auto theEvent = m_reader->readNextEvent(EVENT::LCIO::UPDATE);
   if (theEvent == nullptr) {
     return StatusCode::FAILURE;
