@@ -22,7 +22,7 @@ jobs:
       run: |
         docker run \
           -it --name CI_container \
-          -v ${{ github.workspace }}:/Package \
+          -v ${{ github.workspace }}:/k4MarlinWrapper \
           -v /cvmfs:/cvmfs \
           -d clicdp/cc7-lcg96b /bin/bash
     - name: Check Format
