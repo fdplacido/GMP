@@ -43,6 +43,10 @@ endif()
 # Ninja compiler output
 include(cmake/compiler_output.cmake)
 
+# Sanitizers, enable per target
+include(cmake/Sanitizers.cmake)
+
+
 include(GNUInstallDirs)
 
 find_package(ROOT 6.0 REQUIRED)

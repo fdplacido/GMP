@@ -96,3 +96,8 @@ target_include_directories(Lcio2EDM4hep PUBLIC
   EDM4HEP::edm4hep
   ${LCIO_INCLUDE_DIRS}
 )
+
+enable_sanitizers(k4MarlinWrapperPlugins)
+enable_sanitizers(MarlinWrapper)
+enable_sanitizers(EDM4hep2Lcio)
+enable_sanitizers(Lcio2EDM4hep)
