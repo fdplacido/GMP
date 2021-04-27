@@ -27,4 +27,4 @@ jobs:
           -d clicdp/cc7-lcg96b /bin/bash
     - name: Check Format
       run: |
-        docker exec CI_container /bin/bash -c "./Package/.github/scripts/clang_format_check.sh"
+        docker exec CI_container /bin/bash -c "./k4MarlinWrapper/.github/scripts/clang_format_check.sh"
