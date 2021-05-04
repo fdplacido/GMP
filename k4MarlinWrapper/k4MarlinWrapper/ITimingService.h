@@ -7,9 +7,13 @@ class ITimingService : virtual public IService {
 
 public:
 
-  DeclareInterfaceID( ITimingService, 2, 0 );
+  DeclareInterfaceID( ITimingService, 3, 0 );
 
-  virtual void addTime() = 0;
+  virtual void addTime(
+    const std::string& collection,
+    const int elapsed_time) = 0;
+
+  // virtual void addTime() = 0;
 };
 
 #endif

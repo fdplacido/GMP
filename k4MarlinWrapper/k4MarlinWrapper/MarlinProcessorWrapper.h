@@ -25,6 +25,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <string>
+#include <chrono>
 
 // Gaudi
 #include <GaudiAlg/GaudiAlgorithm.h>
@@ -49,9 +50,7 @@
 #include "k4MarlinWrapper/LCEventWrapper.h"
 #include "k4MarlinWrapper/util/k4MarlinWrapperUtil.h"
 #include "k4MarlinWrapper/converters/IEDMConverter.h"
-
-
-#include <ITimingService.h>
+#include "k4MarlinWrapper/ITimingService.h"
 
 namespace marlin {
   class Processor;

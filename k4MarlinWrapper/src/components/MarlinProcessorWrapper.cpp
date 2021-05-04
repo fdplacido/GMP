@@ -234,7 +234,13 @@ StatusCode MarlinProcessorWrapper::execute() {
 
   // Found EDM Conversion tool
   if (!m_edm_conversionTool.empty()) {
+    auto start = std::chrono::high_resolution_clock::now();
     StatusCode edm_sc =  m_edm_conversionTool->convertCollections(the_event);
+    auto end = std::chrono::high_resolution_clock::now();
+    auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    if (m_timingSvc) {
+      m_timingSvc->addTime("E2L", elapsed.count());
+    }
     if (edm_sc.isFailure()) {
       error() << "Failed converting EDM4hep to LCIO collection " << endmsg;
     }
@@ -243,7 +249,8 @@ StatusCode MarlinProcessorWrapper::execute() {
   // call the refreshSeeds via the processor manager
   // FIXME: this is an overkill, but we need to call this once per event, not once for each execute call
   // how can this be done more efficiently?
-  m_timingSvc->addTime();
+  auto start_pe = std::chrono::high_resolution_clock::now();
+
   auto* procMgr = marlin::ProcessorMgr::instance();
   procMgr->modifyEvent(the_event);
 
@@ -259,9 +266,20 @@ StatusCode MarlinProcessorWrapper::execute() {
     m_processor->processEvent(the_event);
   }
 
+  auto end_pe = std::chrono::high_resolution_clock::now();
+  auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end_pe - start_pe);
+
+  if (m_timingSvc) {
+    m_timingSvc->addTime("PE", elapsed.count());
+  }
+
   // Found LCIO Conversion tool
   if (!m_lcio_conversionTool.empty()) {
+    auto start = std::chrono::high_resolution_clock::now();
     StatusCode lcio_sc =  m_lcio_conversionTool->convertCollections(the_event);
+    if (m_timingSvc) {
+      m_timingSvc->addTime("L2E", elapsed.count());
+    }
     if (lcio_sc.isFailure()) {
       error() << "Failed converting LCIO to EDM4hep collection " << endmsg;
     }
