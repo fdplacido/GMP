@@ -44,6 +44,9 @@ include(cmake/compiler_output.cmake)
 # Sanitizers, enable per target
 include(cmake/Sanitizers.cmake)
 
+# Static analyzers
+include(cmake/StaticAnalyzers.cmake)
+
 include(GNUInstallDirs)
 
 find_package(ROOT 6.0 REQUIRED)
