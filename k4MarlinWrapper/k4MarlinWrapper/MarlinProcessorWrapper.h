@@ -50,7 +50,7 @@
 #include "k4MarlinWrapper/LCEventWrapper.h"
 #include "k4MarlinWrapper/util/k4MarlinWrapperUtil.h"
 #include "k4MarlinWrapper/converters/IEDMConverter.h"
-#include "k4MarlinWrapper/ITimingService.h"
+#include "k4MarlinWrapper/IConvertersTimingService.h"
 
 namespace marlin {
   class Processor;
@@ -82,7 +82,7 @@ private:
     const Gaudi::Property<std::vector<std::string>>& parameters,
     std::string& verbosity) const;
 
-  ServiceHandle<ITimingService> m_timingSvc;
+  ServiceHandle<IConvertersTimingService> m_timingSvc;
 
   /// ProcessorType: The Type of the MarlinProcessor to use
   Gaudi::Property<std::string> m_processorType{this, "ProcessorType", {}};

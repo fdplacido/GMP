@@ -26,7 +26,7 @@
 DECLARE_COMPONENT(MarlinProcessorWrapper)
 
 MarlinProcessorWrapper::MarlinProcessorWrapper(const std::string& name, ISvcLocator* pSL)
-  : GaudiAlgorithm(name, pSL), m_timingSvc("TimingService", name) {
+  : GaudiAlgorithm(name, pSL), m_timingSvc("ConvertersTimingService", name) {
   // register log level names with the logstream ---------
   streamlog::out.addLevelName<streamlog::DEBUG>();
   streamlog::out.addLevelName<streamlog::DEBUG0>();

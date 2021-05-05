@@ -98,14 +98,14 @@ target_include_directories(Lcio2EDM4hep PUBLIC
 )
 
 # TimingService
-gaudi_add_module(TimingService
+gaudi_add_module(ConvertersTimingService
   SOURCES
-    src/components/TimingService.cpp
+    src/components/ConvertersTimingService.cpp
   LINK
     GaudiKernel
 )
 
-target_include_directories(TimingService
+target_include_directories(ConvertersTimingService
   PUBLIC
     k4MarlinWrapper
 )
