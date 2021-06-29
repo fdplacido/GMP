@@ -56,6 +56,9 @@ StatusCode Lcio2EDM4hepTool::initialize() {
     } else if (m_lcio2edm_params[i] == "SimCalorimeterHit") {
       m_dataHandlesMap[m_lcio2edm_params[i+2]] =
         new DataHandle<edm4hep::SimCalorimeterHitCollection>(m_lcio2edm_params[i+2], Gaudi::DataHandle::Writer, this);
+      // Get associated collections
+      m_dataHandlesMap["CaloHitContribution_EXT"] =
+        new DataHandle<edm4hep::CaloHitContributionCollection>("CaloHitContribution_EXT", Gaudi::DataHandle::Writer, this);
     } else if (m_lcio2edm_params[i] == "RawCalorimeterHit") {
       m_dataHandlesMap[m_lcio2edm_params[i+2]] =
         new DataHandle<edm4hep::RawCalorimeterHitCollection>(m_lcio2edm_params[i+2], Gaudi::DataHandle::Writer, this);
@@ -132,8 +135,7 @@ StatusCode Lcio2EDM4hepTool::convertCollections(
     return StatusCode::FAILURE;
   }
 
-  // Set the event to the converter
-  podio::CollectionIDTable* id_table = new podio::CollectionIDTable();
+  auto* id_table = m_podioDataSvc->getCollectionIDs();
   k4LCIOConverter* lcio_converter = new k4LCIOConverter(id_table);
   lcio_converter->set(the_event);
 
@@ -170,6 +172,9 @@ StatusCode Lcio2EDM4hepTool::convertCollections(
       } else if (m_lcio2edm_params[i] == "SimCalorimeterHit") {
         convertPut<edm4hep::SimCalorimeterHitCollection>(
           m_lcio2edm_params[i+2], m_lcio2edm_params[i+1], lcio_converter, id_table);
+        // Get associated collections
+        convertPut<edm4hep::CaloHitContributionCollection>(
+          "CaloHitContribution_EXT", "CaloHitContribution_EXT", lcio_converter, id_table);
       } else if (m_lcio2edm_params[i] == "RawCalorimeterHit") {
         convertPut<edm4hep::RawCalorimeterHitCollection>(
           m_lcio2edm_params[i+2], m_lcio2edm_params[i+1], lcio_converter, id_table);
